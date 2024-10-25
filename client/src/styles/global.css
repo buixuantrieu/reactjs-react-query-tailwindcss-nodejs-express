@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+label {
+  font-weight: 500;
+  color: #531dab;
+}
+.ant-form-item-explain-error {
+  font-size: 12px;
+}

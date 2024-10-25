@@ -16,6 +16,11 @@
      "baseUrl": "./src/",
      "paths": {
       "@constants/*": ["constants/*"],
+      "@pages/*": ["pages/*"],
+      "@components/*": ["components/*"],
+      "@api/*": ["api/*"],
+      "@lib/*": ["lib/*"],
+      "@layouts/*": ["layouts/*"],
 
     },
 
