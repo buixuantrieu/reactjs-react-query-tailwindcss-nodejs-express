@@ -105,6 +105,18 @@
 
     /* Completeness */
     // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
-    "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
-  }
+    "skipLibCheck": true      ,
+     "baseUrl": ".",                           /* Skip type checking all .d.ts files. */
+     "paths": {
+      "@controllers/*": ["./controllers/*"],
+      "@lib/*": ["./lib/*"],
+      "@routes/*": ["./routes/*"],
+      "@utils/*": ["./utils/*"],
+      "@services/*": ["./services/*"]
+  }},
+  "include": ["./**/*.ts"],
+  "exclude": ["node_modules"],
+  "ts-node": {
+    "require": ["tsconfig-paths/register"]
+  },
 }

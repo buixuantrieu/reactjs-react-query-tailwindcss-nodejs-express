@@ -8,18 +8,26 @@ datasource db {
 }
 
 model User {
-  id          Int       @id @default(autoincrement())
-  UserChatOne Chat[]    @relation("UserChatOne")
-  UserChatTwo Chat[]    @relation("UserChatTwo")
-  messages    Message[]
+  id             String    @unique
+  email          String    @unique
+  password       String
+  isVerified     Boolean   @default(false)
+  isActive       Boolean   @default(false)
+  activationCode Int       @default(0)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  expiresAt      DateTime
+  UserChatOne    Chat[]    @relation("UserChatOne")
+  UserChatTwo    Chat[]    @relation("UserChatTwo")
+  messages       Message[]
 
   @@map("users")
 }
 
 model Chat {
   id          Int       @id @default(autoincrement())
-  userOneId   Int
-  userTwoId   Int
+  userOneId   String
+  userTwoId   String
   UserChatOne User      @relation("UserChatOne", fields: [userOneId], references: [id])
   UserChatTwo User      @relation("UserChatTwo", fields: [userTwoId], references: [id])
   messages    Message[]
@@ -31,7 +39,7 @@ model Message {
   id       Int    @id @default(autoincrement())
   chatId   Int
   message  String @db.Text
-  senderId Int
+  senderId String
   chat     Chat   @relation(fields: [chatId], references: [id])
   sender   User   @relation(fields: [senderId], references: [id])
 

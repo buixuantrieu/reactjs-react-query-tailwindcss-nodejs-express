@@ -1,4 +1,8 @@
 export interface ILoginInput {
-  userName: string;
+  email: string;
+  password: string;
+}
+export interface IRegisterInput {
+  email: string;
   password: string;
 }
