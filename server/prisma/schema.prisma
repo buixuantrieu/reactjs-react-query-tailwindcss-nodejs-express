@@ -8,40 +8,219 @@ datasource db {
 }
 
 model User {
-  id             String    @unique
-  email          String    @unique
+  id             String     @unique
+  email          String     @unique
   password       String
-  isVerified     Boolean   @default(false)
-  isActive       Boolean   @default(false)
-  activationCode Int       @default(0)
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
+  isVerified     Boolean    @default(false)
+  isActive       Boolean    @default(false)
+  activationCode Int        @default(0)
+  failedAttempt  Int        @default(0)
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
   expiresAt      DateTime
-  UserChatOne    Chat[]    @relation("UserChatOne")
-  UserChatTwo    Chat[]    @relation("UserChatTwo")
-  messages       Message[]
+  UserRole       UserRole[]
+  Profile        Profile?
 
   @@map("users")
 }
 
-model Chat {
-  id          Int       @id @default(autoincrement())
-  userOneId   String
-  userTwoId   String
-  UserChatOne User      @relation("UserChatOne", fields: [userOneId], references: [id])
-  UserChatTwo User      @relation("UserChatTwo", fields: [userTwoId], references: [id])
-  messages    Message[]
+model Role {
+  id          Int        @id @default(autoincrement())
+  roleName    String
+  description String
+  isDeleted    Boolean    @default(false)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  UserRole    UserRole[]
 
-  @@map("chats")
+  @@map("roles")
 }
 
-model Message {
-  id       Int    @id @default(autoincrement())
-  chatId   Int
-  message  String @db.Text
-  senderId String
-  chat     Chat   @relation(fields: [chatId], references: [id])
-  sender   User   @relation(fields: [senderId], references: [id])
+model UserRole {
+  id     Int    @id @default(autoincrement())
+  roleId Int
+  role   Role   @relation(fields: [roleId], references: [id])
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
 
-  @@map("messages")
+  @@map("user_roles")
+}
+
+model Profile {
+  id          Int       @id @default(autoincrement())
+  user        User      @relation(fields: [userId], references: [id])
+  userId      String    @unique
+  fullName    String?
+  phone       String?
+  dateOfBirth DateTime? @db.Date
+  gender      Int?
+  avatar      String?   @db.MediumText
+  address     String?
+  districtId  Int?
+
+  provinceId Int?
+  wardId     Int?
+  updatedAt  DateTime  @updatedAt
+  provinces  Province? @relation(fields: [provinceId], references: [province_id])
+  districts  District? @relation(fields: [districtId], references: [district_id])
+  wards      Ward?     @relation(fields: [wardId], references: [wards_id])
+
+  @@map("profiles")
+}
+
+model Cinema {
+  id             Int              @id @default(autoincrement())
+  name           String
+  logo           String           @db.Text
+  isDelete       Boolean          @default(false)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  CinemaFacility CinemaFacility[]
+
+  @@map("cinemas")
+}
+
+model CinemaFacility {
+  id         Int               @id @default(autoincrement())
+  name       String
+  location   String
+  provinceId Int
+  districtId Int
+  wardId     Int
+  cinemaId   Int
+  isDelete   Boolean           @default(false)
+  createdAt  DateTime          @default(now())
+  updatedAt  DateTime          @updatedAt
+  cinemas    Cinema            @relation(fields: [cinemaId], references: [id])
+  provinces  Province          @relation(fields: [provinceId], references: [province_id])
+  districts  District          @relation(fields: [districtId], references: [district_id])
+  wards      Ward              @relation(fields: [wardId], references: [wards_id])
+  seatPrices CinemaSeatPrice[]
+  Hall       Hall[]
+  ShowTime   ShowTime[]
+
+  @@map("cinema_facilities")
+}
+
+model SeatType {
+  id        Int               @id @default(autoincrement())
+  type      String            @unique
+  color     String?
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+  prices    CinemaSeatPrice[]
+  Seat      Seat[]
+
+  @@map("seat_types")
+}
+
+model CinemaSeatPrice {
+  id         Int            @id @default(autoincrement())
+  facilityId Int
+  seatTypeId Int
+  price      Float
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+  cinema     CinemaFacility @relation(fields: [facilityId], references: [id])
+  seatType   SeatType       @relation(fields: [seatTypeId], references: [id])
+
+  @@map("cinema_seat_prices")
+}
+
+model Hall {
+  id             Int            @id @default(autoincrement())
+  name           String
+  columns        Int
+  rows           Int
+  facilityId     Int
+  isDeleted      Boolean        @default(false)
+  seats          Seat[]
+  ShowTime       ShowTime[]
+  CinemaFacility CinemaFacility @relation(fields: [facilityId], references: [id])
+
+  @@map("halls")
+}
+
+model Seat {
+  id          Int          @id @default(autoincrement())
+  hallId      Int
+  row         String
+  seatNumber  Int
+  typeId      Int
+  isAvailable Boolean      @default(true)
+  hall        Hall         @relation(fields: [hallId], references: [id])
+  type        SeatType     @relation(fields: [typeId], references: [id])
+  SeatStatus  SeatStatus[]
+
+  @@map("seats")
+}
+
+model SeatStatus {
+  id         Int      @id @default(autoincrement())
+  showTimeId Int
+  seatId     Int
+  isBooked   Boolean  @default(false)
+  showTime   ShowTime @relation(fields: [showTimeId], references: [id])
+  seat       Seat     @relation(fields: [seatId], references: [id])
+
+  @@map("seat_status")
+}
+
+model Movie {
+  id        Int        @id @default(autoincrement())
+  title     String
+  duration  Int
+  genre     String
+  avatar    String     @db.Text
+  showtimes ShowTime[]
+
+  @@map("movies")
+}
+
+model ShowTime {
+  id         Int            @id @default(autoincrement())
+  facilityId Int
+  cinema     CinemaFacility @relation(fields: [facilityId], references: [id])
+  hallId     Int
+  movieId    Int
+  startTime  DateTime
+  endTime    DateTime
+  hall       Hall           @relation(fields: [hallId], references: [id])
+  movie      Movie          @relation(fields: [movieId], references: [id])
+  SeatStatus SeatStatus[]
+
+  @@map("show_times")
+}
+
+model Province {
+  province_id    Int              @id @map("province_id")
+  name           String           @map("name") @db.VarChar(64)
+  District       District[]
+  CinemaFacility CinemaFacility[]
+  Profile        Profile[]
+
+  @@map("provinces")
+}
+
+model District {
+  district_id    Int              @id @map("district_id")
+  province_id    Int
+  name           String           @map("name") @db.VarChar(64)
+  Province       Province         @relation(fields: [province_id], references: [province_id])
+  Wards          Ward[]
+  CinemaFacility CinemaFacility[]
+  Profile        Profile[]
+
+  @@map("districts")
+}
+
+model Ward {
+  wards_id       Int              @id @map("wards_id")
+  district_id    Int
+  name           String           @map("name") @db.VarChar(64)
+  District       District         @relation(fields: [district_id], references: [district_id])
+  CinemaFacility CinemaFacility[]
+  Profile        Profile[]
+
+  @@map("wards")
 }

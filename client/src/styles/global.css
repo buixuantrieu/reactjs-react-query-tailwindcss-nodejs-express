@@ -4,8 +4,45 @@
 
 label {
   font-weight: 500;
-  color: #531dab;
+  color: #c2dbff !important;
 }
 .ant-form-item-explain-error {
   font-size: 12px;
+}
+.checkmark::after {
+  content: "✓";
+  position: absolute;
+  color: white !important;
+  font-size: 12px;
+  font-size: 20px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.box-shadow {
+  box-shadow: 0 0 4px #8fbdff;
+}
+.ant-input::placeholder {
+  color: white;
+  opacity: 0.2;
+}
+.ant-card-head-title {
+  color: #8fbdff;
+}
+.ant-card-head {
+  border-bottom: 1px solid #8fbdff !important;
+}
+
+.ant-select-arrow {
+  color: white !important;
+}
+.bg-transparent {
+  background-color: transparent !important;
+}
+.ant-table {
+  background-color: transparent !important;
+}
+.ant-table-thead {
+  border-bottom: 1px solid #8fbdff !important;
 }

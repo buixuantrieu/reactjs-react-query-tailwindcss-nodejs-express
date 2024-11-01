@@ -2,11 +2,15 @@
 import { useEffect, useState } from "react";
 import { Button, Form, Input, notification } from "antd";
 import { RegisterUser, LoginUser } from "@api/users/queries";
+import { useNavigate } from "react-router-dom";
+import { ROUTES } from "@constants/routes";
 
 function Auth() {
   const [isLogin, setIsLogin] = useState<boolean>(false);
   const [formSignUp] = Form.useForm();
   const [formSignIn] = Form.useForm();
+  const navigate = useNavigate();
+
   type signUpForm = {
     email: string;
     password: string;
@@ -26,10 +30,11 @@ function Auth() {
         password: values.password,
       },
       {
-        onSuccess: () => {
+        onSuccess: (result) => {
           setIsLogin(false);
           formSignUp.resetFields();
           notification.success({ message: "Đăng kí tài khoản thành công!" });
+          navigate(`${ROUTES.VERIFIED}?email=${result.data.user.email}&id=${result.data.user.id}`);
         },
         onError: (e) => {
           console.log(e);
@@ -53,6 +58,12 @@ function Auth() {
             7 * 24 * 60 * 60
           }; path=/; secure; samesite=strict`;
           formSignIn.resetFields();
+          const checkRole = result.data.userRole.some((item: { [key: string]: number }) => item.roleId !== 1);
+          if (checkRole) {
+            navigate(ROUTES.ADMIN.DASHBOARD);
+          } else {
+            navigate(ROUTES.USER.HOME);
+          }
         },
       }
     );
@@ -100,22 +111,30 @@ function Auth() {
   }, [loginError, formSignIn]);
 
   return (
-    <div className="min-h-[100vh] bg-slate-300 flex items-center justify-center ">
-      <div className="relative w-[1000px] h-[600px] rounded-[12px] overflow-hidden bg-white shadow">
-        <div className="absolute top-0 left-[0] w-[100%] h-[100%] flex">
+    <div className="min-h-[100vh] bg-[#0f1d2f] flex items-center justify-center ">
+      <div className="relative w-[1000px] h-[600px] rounded-[12px] overflow-hidden bg-[#0f1d2feb] box-shadow ">
+        <div className="absolute  top-0 left-[0] w-[100%] h-[100%] flex">
           <div
             className={`relative  w-[50%] p-8 h-[100%] flex items-center justify-center flex-col gap-4 transition-all duration-1000
               ${!isLogin ? "top-[0px]" : "top-[100%]"}`}
           >
-            <h1 className="text-[28px] font-bold">Đăng nhập</h1>
+            <h1 className="text-[28px] font-bold text-[#8fbdff]">Đăng nhập</h1>
             <Form form={formSignIn} layout="vertical" onFinish={handleSignIn} className="w-[100%]">
-              <Form.Item label="Email:" name="emailLogin">
-                <Input placeholder="Email" className="w-[100%] bg-slate-100" />
+              <Form.Item label="Email:" name="emailLogin" rules={[{ required: true, message: "Vui lòng nhập email!" }]}>
+                <Input placeholder="Email" className="w-[100%]  bg-transparent text-white" autoComplete="email" />
               </Form.Item>
-              <Form.Item label="Mật khẩu:" name="passwordLogin">
-                <Input.Password placeholder="Password" className="w-[100%] bg-slate-100" />
+              <Form.Item
+                label="Mật khẩu:"
+                name="passwordLogin"
+                rules={[{ required: true, message: "Vui lòng nhập mật khẩu!" }]}
+              >
+                <Input.Password
+                  placeholder="Password"
+                  className="w-[100%] bg-transparent"
+                  autoComplete="password-login"
+                />
               </Form.Item>
-              <Button loading={loginLoading} htmlType="submit" className="w-full" type="primary">
+              <Button loading={loginLoading} htmlType="submit" ghost className="w-full" type="primary">
                 Đăng nhập
               </Button>
             </Form>
@@ -124,25 +143,66 @@ function Auth() {
             className={`relative  w-[50%] p-8 h-[100%] flex items-center justify-center flex-col gap-4 transition-all duration-1000
               ${isLogin ? "top-[0px]" : "top-[100%]"}`}
           >
-            <h1 className="text-[28px] font-bold">Đăng kí</h1>
+            <h1 className="text-[28px] font-bold text-[#8fbdff]">Đăng kí</h1>
             <Form form={formSignUp} layout="vertical" onFinish={handleSignUp} className="w-[100%]">
-              <Form.Item name="email" label="Email:">
-                <Input placeholder="Email" className="w-[100%] bg-slate-100" />
+              <Form.Item
+                name="email"
+                label="Email:"
+                rules={[
+                  { required: true, message: "Vui lòng nhập email!" },
+                  { type: "email", message: "Email không hợp lệ!" },
+                ]}
+              >
+                <Input placeholder="Email" className="w-[100%] bg-transparent" />
               </Form.Item>
-              <Form.Item name="password" label="Mật khẩu:">
-                <Input.Password placeholder="Password" className="w-[100%] bg-slate-100" />
+              <Form.Item
+                name="password"
+                label="Mật khẩu:"
+                rules={[
+                  {
+                    required: true,
+                    message: "Vui lòng nhập mật khẩu!",
+                  },
+                  {
+                    pattern: /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})/g,
+                    message: "Mật khẩu yếu!",
+                  },
+                ]}
+              >
+                <Input.Password placeholder="Password" className="w-[100%] bg-transparent" autoComplete="password" />
               </Form.Item>
-              <Form.Item name="confirmPassword" label="Nhập lại mật khẩu:">
-                <Input.Password placeholder="ConfirmPassword" className="w-[100%] bg-slate-100" />
+              <Form.Item
+                name="confirmPassword"
+                label="Nhập lại mật khẩu:"
+                rules={[
+                  {
+                    required: true,
+                    message: "Vui lòng nhập lại mật khẩu!",
+                  },
+                  (params) => ({
+                    validator(_, value) {
+                      if (!value || params.getFieldValue("password") === value) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(new Error("Mật khẩu không khớp!"));
+                    },
+                  }),
+                ]}
+              >
+                <Input.Password
+                  placeholder="ConfirmPassword"
+                  className="w-[100%] bg-transparent"
+                  autoComplete="confirm-password"
+                />
               </Form.Item>
-              <Button loading={registerLoading} htmlType="submit" className="w-full" type="primary">
+              <Button loading={registerLoading} htmlType="submit" ghost className="w-full" type="primary">
                 Đăng kí
               </Button>
             </Form>
           </div>
         </div>
         <div
-          className={`absolute overflow-hidden   w-[50%] top-0 transition-all duration-1000 h-[100%] bg-[#531dab]
+          className={`absolute overflow-hidden   w-[50%] top-0 transition-all duration-1000 h-[100%] box-shadow bg-[#031327]
             ${isLogin ? "rounded-r-[100px] left-0" : "rounded-l-[100px]  left-[50%]"}`}
         >
           <div
@@ -154,30 +214,34 @@ function Auth() {
               <p className="text-white font-thin text-center">
                 Đăng ký với thông tin cá nhân của bạn để sử dụng tất cả các tính năng của trang web.
               </p>
-              <button
+              <Button
                 onClick={() => {
                   setIsLogin(true);
                   formSignIn.resetFields();
                 }}
-                className="px-6 py-1 text-white rounded border border-white hover:bg-white hover:text-[#531dab] cursor-pointer transition duration-300"
+                className="cursor-pointer"
+                type="primary"
+                ghost
               >
                 Đăng kí
-              </button>
+              </Button>
             </div>
             <div className="w-[50%] p-10 flex flex-col gap-4 items-center justify-center h-[100%]">
               <h1 className="text-[28px]  text-white font-bold">Chào mừng trở lại!</h1>
               <p className="text-white font-thin text-center">
                 Nhập thông tin cá nhân của bạn để sử dụng tất cả các tính năng của trang web.
               </p>
-              <button
+              <Button
                 onClick={() => {
                   setIsLogin(false);
                   formSignUp.resetFields();
                 }}
-                className="px-6 py-1 text-white rounded border border-white hover:bg-white hover:text-[#531dab] cursor-pointer transition duration-300"
+                className="cursor-pointer"
+                type="primary"
+                ghost
               >
                 Đăng nhập
-              </button>
+              </Button>
             </div>
           </div>
         </div>
