@@ -29,6 +29,17 @@ const existenceCheckUser = async (email: string) => {
     where: {
       email,
     },
+    include: {
+      UserRole: true,
+    },
+  });
+  return result;
+};
+const getUserById = async (id: string) => {
+  const result = await prisma.user.findFirst({
+    where: {
+      id,
+    },
   });
   return result;
 };
@@ -48,4 +59,59 @@ const registerUser = async (email: string, password: string, activationCode: num
   return result;
 };
 
-export { hashPassword, registerUser, checkPassword, existenceCheckUser, createAccessToken, createRefreshToken };
+const isVerified = async (id: string) => {
+  return await prisma.$transaction(async (prisma) => {
+    const user = await prisma.user.update({
+      where: {
+        id,
+      },
+      data: {
+        isVerified: true,
+        isActive: true,
+      },
+    });
+
+    await prisma.userRole.create({
+      data: {
+        userId: id,
+        roleId: 1,
+      },
+    });
+
+    await prisma.profile.create({
+      data: {
+        userId: id,
+      },
+    });
+
+    return user;
+  });
+};
+
+const checkRoleAdmin = async (id: string) => {
+  const user = await prisma.user.findFirst({
+    where: {
+      id,
+    },
+    include: {
+      UserRole: true,
+    },
+  });
+  const checkRole = user?.UserRole.some((item) => item.roleId === 2);
+  if (checkRole) {
+    return true;
+  }
+  return false;
+};
+
+export {
+  hashPassword,
+  registerUser,
+  checkPassword,
+  existenceCheckUser,
+  createAccessToken,
+  createRefreshToken,
+  getUserById,
+  isVerified,
+  checkRoleAdmin,
+};

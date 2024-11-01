@@ -1,11 +1,8 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 import userClient from "./fetchers";
 
-enum QueryKeys {
-  REGISTER = "register",
-  LOGIN = "login",
-}
+import { QueryKeys } from "@api/queryKeys";
 
 const RegisterUser = () => {
   return useMutation({
@@ -20,4 +17,19 @@ const LoginUser = () => {
   });
 };
 
-export { RegisterUser, LoginUser };
+const Verified = () => {
+  return useMutation({
+    mutationKey: [QueryKeys.VERIFIED],
+    mutationFn: userClient.verified,
+  });
+};
+const GetUserInfo = () => {
+  return useQuery({
+    queryKey: [QueryKeys.USER_INFO],
+    queryFn: userClient.getUserInfo,
+    refetchInterval: 300000,
+    retry: 0,
+  });
+};
+
+export { RegisterUser, LoginUser, Verified, GetUserInfo };

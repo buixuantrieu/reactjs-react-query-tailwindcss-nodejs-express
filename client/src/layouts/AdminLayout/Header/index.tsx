@@ -1,9 +1,44 @@
 import { IoMdStar } from "react-icons/io";
+import { GetUserInfo } from "@api/users/queries";
+import { useEffect, useMemo } from "react";
+import { UserRole } from "types/user";
+
+import { useNavigate } from "react-router-dom";
+import { ROUTES } from "@constants/routes";
 
 function Header() {
+  const { data: userInfo, isLoading } = GetUserInfo();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!isLoading) {
+      if (!userInfo) {
+        navigate(ROUTES.AUTH);
+      } else {
+        if (userInfo.data.data.UserRole.some((item: { [key: string]: number }) => item.roleId === 1)) {
+          navigate(ROUTES.USER.HOME);
+        }
+      }
+    }
+  }, [userInfo, isLoading, navigate]);
+
+  const renderRole = useMemo(() => {
+    if (!userInfo || !userInfo.data || !userInfo.data.data.UserRole) return null;
+    return userInfo.data.data.UserRole.map((item: UserRole, index: number) => {
+      return (
+        <span
+          key={index}
+          className="py-[2px] text-[12px] flex gap-1 px-3 bg-[#ffb933] rounded-[12px] font-semibold border"
+        >
+          <IoMdStar />
+          {item.role.roleName}
+        </span>
+      );
+    });
+  }, [userInfo]);
+
   return (
     <div className="relative">
-      <img className="w-full " src="public/assets/images/anh-bia-dashboard.jpeg" alt="" />
+      <img className="w-full " src="/public/assets/images/anh-bia-dashboard.jpeg" alt="" />
       <div className="absolute bottom-0 left-[50px] translate-y-[50%] w-[120px] h-[120px] rounded-[50%] overflow-hidden  border-[2px] bg-black">
         <img
           className="w-full aspect-[1/1] object-cover"
@@ -12,11 +47,8 @@ function Header() {
         />
       </div>
       <div className="absolute bottom-[12px] left-[180px] flex items-center gap-2">
-        <span className="text-[white] font-bold text-[24px]">Bùi Xuân Triều</span>
-        <span className="py-[2px] text-[12px] flex gap-1 px-3 bg-[#ffb933] rounded-[12px] font-semibold border">
-          <IoMdStar />
-          Pro User
-        </span>
+        <span className="text-[white] font-bold text-[24px]">{userInfo?.data?.data?.Profile?.fullName}</span>
+        {renderRole}
       </div>
     </div>
   );

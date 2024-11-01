@@ -21,6 +21,8 @@
       "@api/*": ["api/*"],
       "@lib/*": ["lib/*"],
       "@layouts/*": ["layouts/*"],
+      "@utils/*": ["utils/*"], 
+      "@type/*": ["types/*"],
 
     },
 

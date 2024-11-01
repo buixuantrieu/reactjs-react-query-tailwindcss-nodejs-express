@@ -1,12 +1,18 @@
 import express from "express";
 import dotenv from "dotenv";
-import authRoute from "@routes/authRoute";
+
 import bodyParser from "body-parser";
 
 import cors from "cors";
 import http from "http";
 import prisma from "@lib/prisma";
 import cron from "node-cron";
+
+import authRoute from "@routes/authRoute";
+import locationRoute from "@routes/locationRoute";
+import hallRoute from "@routes/hallRoute";
+import cinemaRoute from "@routes/cinemaRoute";
+import userRoute from "@routes/userRoute";
 
 const app = express();
 dotenv.config();
@@ -36,6 +42,10 @@ cron.schedule("*/5 * * * *", async () => {
 });
 
 app.use("/api/v1/auth", authRoute);
+app.use("/api/v1/location", locationRoute);
+app.use("/api/v1/hall", hallRoute);
+app.use("/api/v1/cinema", cinemaRoute);
+app.use("/api/v1/user", userRoute);
 
 server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
