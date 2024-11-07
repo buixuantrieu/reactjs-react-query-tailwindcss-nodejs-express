@@ -9,6 +9,13 @@ const cinemaClient = {
   getCinema: () => {
     return axios.get(CINEMA_ENDPOINTS.CINEMA);
   },
+  getCinemaByMovieId: (movieId: number) => {
+    return axios.get(CINEMA_ENDPOINTS.CINEMA, {
+      params: {
+        movieId,
+      },
+    });
+  },
   getCinemaDetail: (id: number) => {
     return axios.get(CINEMA_ENDPOINTS.CINEMA_DETAIL(id));
   },

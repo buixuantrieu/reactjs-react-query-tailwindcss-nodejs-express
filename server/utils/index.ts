@@ -26,4 +26,6 @@ const sendMail = async (email: string, htmlContent: string) => {
     return false;
   }
 };
+
+
 export { sendMail, randomNumber };

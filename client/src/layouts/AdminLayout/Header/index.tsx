@@ -42,7 +42,7 @@ function Header() {
       <div className="absolute bottom-0 left-[50px] translate-y-[50%] w-[120px] h-[120px] rounded-[50%] overflow-hidden  border-[2px] bg-black">
         <img
           className="w-full aspect-[1/1] object-cover"
-          src="https://scontent.fdad1-4.fna.fbcdn.net/v/t39.30808-1/407919981_1802218826873940_3153245800751188815_n.jpg?stp=c0.0.1536.1536a_dst-jpg_s480x480&_nc_cat=105&ccb=1-7&_nc_sid=0ecb9b&_nc_ohc=5kEBv_JOyvMQ7kNvgE4fb25&_nc_zt=24&_nc_ht=scontent.fdad1-4.fna&_nc_gid=AtcGatb_7r6E-_eLwnCM42Y&oh=00_AYA62MXsI2vctTZw_MJQEd0pV-dbz9t-qdy9vC3B8CKBKg&oe=671E5731"
+          src="https://scontent.fdad1-4.fna.fbcdn.net/v/t39.30808-1/407919981_1802218826873940_3153245800751188815_n.jpg?stp=c0.0.1536.1536a_dst-jpg_s480x480&_nc_cat=105&ccb=1-7&_nc_sid=0ecb9b&_nc_ohc=zWiUAjSm1YAQ7kNvgHg2UqS&_nc_zt=24&_nc_ht=scontent.fdad1-4.fna&_nc_gid=AMbcSJ5k8K0UUtecAPYqxIo&oh=00_AYDURbEu8gKRcDdX5W-MWJfwtmPQfoWJ69Z6YoUi8h1BjQ&oe=6730CC31"
           alt=""
         />
       </div>

@@ -46,3 +46,22 @@ label {
 .ant-table-thead {
   border-bottom: 1px solid #8fbdff !important;
 }
+.ant-picker-input-placeholder input {
+  color: #8fbdff66 !important;
+}
+.ant-picker-input input::placeholder {
+  color: #8fbdff66 !important;
+}
+.ant-input-suffix path {
+  color: white !important;
+}
+.ant-picker-clear path {
+  color: white !important;
+}
+.hide-scrollbar {
+  scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}

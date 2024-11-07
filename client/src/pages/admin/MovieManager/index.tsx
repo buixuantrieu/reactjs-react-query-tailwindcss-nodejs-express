@@ -1,60 +1,82 @@
 import { Button, Table } from "antd";
-import { Link } from "react-router-dom";
+import { Link, generatePath } from "react-router-dom";
 
 import { ROUTES } from "@constants/routes";
-import { GetHallAll } from "@api/hall/queries";
+
+import { GetMovie } from "@api/movie/queries";
 import { useEffect, useState } from "react";
-import { Facility, Hall, Seat } from "@type/cinema";
+import dayjs from "dayjs";
 
 function MovieManager() {
-  const [hallList, setHallList] = useState([]);
-
-  const { mutate: getHallAll } = GetHallAll();
+  const [movieList, setMovieList] = useState([]);
+  const { mutate: getMovie } = GetMovie();
 
   useEffect(() => {
-    getHallAll(undefined, {
+    getMovie(undefined, {
       onSuccess: (result) => {
-        setHallList(result.data.data);
+        setMovieList(result.data.data);
       },
     });
-  }, [getHallAll]);
-  console.log(hallList);
+  }, [getMovie]);
+
+  const handleUpdate = (id: number) => {
+    console.log(id);
+  };
+  const handleDelete = (id: number) => {
+    console.log(id);
+  };
 
   const columns = [
     {
-      dataIndex: "name",
-      title: "Tên rạp",
+      dataIndex: "posterUrl",
+      title: "Poster",
+      key: "poster",
+      render: (item: string) => <img className="w-[100px]" src={item} alt="" />,
+    },
+    {
+      dataIndex: "title",
+      title: "Tên phim",
       key: "name",
     },
     {
-      dataIndex: "CinemaFacility",
-      title: "Cơ sở",
-      key: "facility",
-      render: (item: Hall) => item.name,
+      dataIndex: "director",
+      title: "Đạo diễn",
+      key: "director",
     },
     {
-      dataIndex: "CinemaFacility",
-      title: "Cinema",
-      key: "cinema",
-      render: (item: Facility) => item.cinemas.name,
+      dataIndex: "releaseDate",
+      title: "Ngày phát hành",
+      key: "releaseDate",
+      render: (date: Date) => dayjs(date).format("DD/MM/YYYY"),
     },
     {
-      dataIndex: "seats",
-      title: "Số lượng ghế",
-      key: "seats",
-      render: (item: Seat[]) => item.filter((seat) => seat.isAvailable !== false).length,
+      dataIndex: "id",
+      title: "Thao tác",
+      key: "control",
+      render: (id: number) => (
+        <div className="flex gap-4">
+          <Link to={generatePath(ROUTES.ADMIN.EDIT_MOVIE, { id })}>
+            <Button onClick={() => handleUpdate(id)} type="primary" ghost>
+              Chỉnh sửa
+            </Button>
+          </Link>
+          <Button onClick={() => handleDelete(id)} ghost danger>
+            Xóa
+          </Button>
+        </div>
+      ),
     },
   ];
 
   return (
     <div className="p-10 pt-[70px]">
       <h1 className="text-center text-[20px] font-semibold mb-4 text-[#8fbdff]">Danh sách phim</h1>
-      <Link to={ROUTES.ADMIN.CREATE_HALL}>
+      <Link to={ROUTES.ADMIN.CREATE_MOVIE}>
         <Button type="primary" ghost className="mb-4">
           Thêm phim
         </Button>
       </Link>
-      <Table columns={columns} dataSource={hallList} rowKey="id" className="box-shadow rounded" />
+      <Table columns={columns} dataSource={movieList} rowKey="id" className="box-shadow rounded" />
     </div>
   );
 }

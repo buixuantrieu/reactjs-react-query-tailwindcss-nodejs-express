@@ -14,11 +14,11 @@ function BookingTicket() {
         setHallDetail(result.data);
       },
     });
-  }, []);
+  }, [getHallDetail]);
   console.log(hallDetail?.seats);
   const renderSeat = useMemo(
     () =>
-      hallDetail?.seats.map((item, index) => {
+      hallDetail?.seats.map((item: any, index: number) => {
         return (
           <div key={index} className="flex flex-col items-center cursor-pointer p-1  rounded box-shadow">
             {!item.status ? (

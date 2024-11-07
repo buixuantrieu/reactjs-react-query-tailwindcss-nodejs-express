@@ -3,6 +3,7 @@ import {
   createFacility,
   getCinema,
   getCinemaById,
+  getCinemaByMovieId,
   getFacility,
   getFacilityByCinemaId,
   getFacilityDetail,
@@ -24,8 +25,14 @@ class cinemaController {
   }
   static async getCinema(req: Request, res: Response) {
     try {
-      const result = await getCinema();
-      res.status(200).json({ message: "get cinema successfully!", data: result });
+      const { movieId } = req.query;
+      if (movieId) {
+        const result = await getCinemaByMovieId(Number(movieId));
+        res.status(200).json({ message: "get cinema successfully!", data: result });
+      } else {
+        const result = await getCinema();
+        res.status(200).json({ message: "get cinema successfully!", data: result });
+      }
     } catch (e) {
       return res.status(500).json({ message: "Internal Server Error" });
     }

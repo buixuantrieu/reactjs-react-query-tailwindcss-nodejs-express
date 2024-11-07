@@ -26,6 +26,12 @@ const GetFacilityByCinemaId = () => {
     mutationFn: cinemaClient.getFacilityByCinemaId,
   });
 };
+const GetCinemaByMovieId = () => {
+  return useMutation({
+    mutationKey: [QueryKeys.GET_CINEMA_BY_MOVIE_ID],
+    mutationFn: cinemaClient.getCinemaByMovieId,
+  });
+};
 
 const GetCinemaDetail = () => {
   return useMutation({
@@ -65,4 +71,5 @@ export {
   UpdateCinema,
   GetFacilityDetail,
   UpdateFacility,
+  GetCinemaByMovieId,
 };

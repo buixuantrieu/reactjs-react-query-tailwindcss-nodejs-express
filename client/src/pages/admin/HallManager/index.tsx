@@ -18,7 +18,6 @@ function HallManager() {
       },
     });
   }, [getHallAll]);
-  console.log(hallList);
 
   const columns = [
     {

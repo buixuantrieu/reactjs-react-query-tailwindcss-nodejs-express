@@ -60,8 +60,11 @@ const checkNameHall = async (name: string, facilityId: number) => {
   return true;
 };
 
-const getHallAll = async () => {
+const getHallAll = async (facilityId: number | undefined) => {
   const result = await prisma.hall.findMany({
+    where: {
+      facilityId: facilityId,
+    },
     include: {
       CinemaFacility: {
         include: {

@@ -12,7 +12,9 @@ import authRoute from "@routes/authRoute";
 import locationRoute from "@routes/locationRoute";
 import hallRoute from "@routes/hallRoute";
 import cinemaRoute from "@routes/cinemaRoute";
+import movieRoute from "@routes/movieRoute";
 import userRoute from "@routes/userRoute";
+import showtimeRoute from "@routes/showtimeRoute";
 
 const app = express();
 dotenv.config();
@@ -46,6 +48,8 @@ app.use("/api/v1/location", locationRoute);
 app.use("/api/v1/hall", hallRoute);
 app.use("/api/v1/cinema", cinemaRoute);
 app.use("/api/v1/user", userRoute);
+app.use("/api/v1/movie", movieRoute);
+app.use("/api/v1/show-time", showtimeRoute);
 
 server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

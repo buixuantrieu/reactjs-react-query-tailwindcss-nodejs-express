@@ -28,7 +28,7 @@ model Role {
   id          Int        @id @default(autoincrement())
   roleName    String
   description String
-  isDeleted    Boolean    @default(false)
+  isDeleted   Boolean    @default(false)
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
   UserRole    UserRole[]
@@ -97,7 +97,6 @@ model CinemaFacility {
   wards      Ward              @relation(fields: [wardId], references: [wards_id])
   seatPrices CinemaSeatPrice[]
   Hall       Hall[]
-  ShowTime   ShowTime[]
 
   @@map("cinema_facilities")
 }
@@ -167,27 +166,49 @@ model SeatStatus {
 }
 
 model Movie {
-  id        Int        @id @default(autoincrement())
-  title     String
-  duration  Int
-  genre     String
-  avatar    String     @db.Text
-  showtimes ShowTime[]
+  id             Int        @id @default(autoincrement())
+  title          String
+  description    String     @db.MediumText
+  genreId        Int
+  duration       Int
+  releaseDate    DateTime   @db.Date
+  director       String
+  cast           String
+  language       String
+  subtitles      String
+  posterUrl      String     @db.Text
+  trailerUrl     String     @db.Text
+  ageRestriction Int
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+  isActive       Boolean    @default(true)
+  ShowTime       ShowTime[]
+  Genre          Genre      @relation(fields: [genreId], references: [id])
 
   @@map("movies")
 }
 
+model Genre {
+  id          Int     @id @default(autoincrement())
+  name        String  @unique
+  description String?
+  movies      Movie[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model ShowTime {
-  id         Int            @id @default(autoincrement())
-  facilityId Int
-  cinema     CinemaFacility @relation(fields: [facilityId], references: [id])
+  id         Int          @id @default(autoincrement())
   hallId     Int
   movieId    Int
   startTime  DateTime
   endTime    DateTime
-  hall       Hall           @relation(fields: [hallId], references: [id])
-  movie      Movie          @relation(fields: [movieId], references: [id])
+  hall       Hall         @relation(fields: [hallId], references: [id])
+  movie      Movie        @relation(fields: [movieId], references: [id])
   SeatStatus SeatStatus[]
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
 
   @@map("show_times")
 }
