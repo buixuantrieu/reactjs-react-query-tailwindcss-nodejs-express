@@ -19,6 +19,38 @@ const getCinema = async () => {
   return result;
 };
 
+const getCinemaByMovieId = async (movieId: number) => {
+  const result = await prisma.cinema.findMany({
+    where: {
+      CinemaFacility: {
+        some: {
+          Hall: {
+            some: {
+              ShowTime: {
+                some: {
+                  movieId: movieId,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    include: {
+      CinemaFacility: {
+        include: {
+          Hall: {
+            include: {
+              ShowTime: true,
+            },
+          },
+        },
+      },
+    },
+  });
+  return result;
+};
+
 const createFacility = async (
   cinemaId: number,
   name: string,
@@ -132,4 +164,5 @@ export {
   getFacility,
   getFacilityDetail,
   updateFacility,
+  getCinemaByMovieId,
 };

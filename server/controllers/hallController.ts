@@ -12,8 +12,14 @@ class hallController {
   }
   static async getHall(req: Request, res: Response) {
     try {
-      const result = await getHallAll();
-      return res.status(200).json({ message: "get seat type successfully", data: result });
+      const { facilityId } = req.query;
+      if (facilityId) {
+        const result = await getHallAll(Number(facilityId));
+        return res.status(200).json({ message: "get seat type successfully", data: result });
+      } else {
+        const result = await getHallAll(undefined);
+        return res.status(200).json({ message: "get seat type successfully", data: result });
+      }
     } catch (e) {
       return res.status(500).json({ message: "Internal Server Error" });
     }

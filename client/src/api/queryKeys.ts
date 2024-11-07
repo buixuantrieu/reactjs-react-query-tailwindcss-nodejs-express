@@ -18,4 +18,12 @@ export enum QueryKeys {
   CREATE_HALL = "create-hall",
   GET_HALL_DETAIL = "get-hall-detail",
   GET_HALL_ALL = "get-hall-all",
+  CREATE_MOVIE = "create-movie",
+  GET_MOVIE = "get-movie",
+  UPDATE_MOVIE = "update-movie",
+  GET_MOVIE_DETAIL = "get-movie-detail",
+  GET_GENRE = "get-genre",
+  GET_SHOWTIME = "get-showtime",
+  GET_SHOWTIME_DETAIL = "get-showtime-detail",
+  GET_CINEMA_BY_MOVIE_ID = "get-cinema-by-movie-id",
 }

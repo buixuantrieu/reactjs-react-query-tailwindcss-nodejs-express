@@ -12,8 +12,12 @@ const hallClient = {
   getHallDetail: (id: number) => {
     return axios.get(`${CINEMA_ENDPOINTS.HALL}/${id}`);
   },
-  getHallAll: () => {
-    return axios.get(CINEMA_ENDPOINTS.HALL);
+  getHallAll: (facilityId: number | undefined) => {
+    return axios.get(CINEMA_ENDPOINTS.HALL, {
+      params: {
+        facilityId,
+      },
+    });
   },
 };
 export default hallClient;

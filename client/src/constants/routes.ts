@@ -12,11 +12,18 @@ export const ROUTES = {
     EDIT_FACILITY: "/admin/cinema/facility/:id/edit",
     CREATE_FACILITY: "/admin/cinema/facility/new",
     SHOWTIME: "/admin/show-time",
+    CREATE_SHOWTIME: "/admin/show-time/new",
     MOVIE: "/admin/movie",
     CREATE_MOVIE: "/admin/create-movie",
+    EDIT_MOVIE: "/admin/movie/:id/edit",
+    EDIT_SHOWTIME: `/admin/show-time/:id/edit`,
   },
   USER: {
     HOME: "/",
     BOOKING: "/booking",
+    MOVIE_LIST: "/movie-list",
+    NEWS: "/news",
+    VOUCHER: "/voucher",
+    MOVIE_DETAIL: "/movie/:id",
   },
 };

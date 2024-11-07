@@ -27,7 +27,7 @@ const items = [
   {
     key: "3",
     icon: <CalendarOutlined />,
-    label: "Lịch chiếu",
+    label: <Link to={ROUTES.ADMIN.SHOWTIME}>Lịch chiếu</Link>,
   },
   {
     key: "4",

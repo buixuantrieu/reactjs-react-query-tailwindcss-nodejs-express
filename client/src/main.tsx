@@ -38,6 +38,9 @@ createRoot(document.getElementById("root")!).render(
           Menu: {
             darkItemSelectedBg: "#232e3f",
           },
+          DatePicker: {
+            colorText: "#8fbdff",
+          },
         },
       }}
     >

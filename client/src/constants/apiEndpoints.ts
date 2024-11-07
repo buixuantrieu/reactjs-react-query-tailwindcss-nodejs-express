@@ -26,3 +26,13 @@ export const CINEMA_ENDPOINTS = {
 export const USER_ENDPOINTS = {
   USER_INFO: `${BASE_URL}/user/user-info`,
 };
+export const MOVIE_ENDPOINTS = {
+  MOVIE: `${BASE_URL}/movie`,
+  GENRE: `${BASE_URL}/movie/genre`,
+  MOVIE_DETAIL: (id: number) => `${BASE_URL}/movie/${id}`,
+};
+export const SHOWTIME_ENDPOINTS = {
+  SHOWTIME: `${BASE_URL}/show-time`,
+  SHOWTIME_DETAIL: (id: number) => `${BASE_URL}/show-time/${id}`,
+};
+
